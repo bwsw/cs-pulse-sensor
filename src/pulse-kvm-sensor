@@ -15,7 +15,7 @@ from influxdb import InfluxDBClient
 from xml.etree import ElementTree
 
 cloudstack = CloudStack.Client(config.api, config.apikey, config.secret)
-influxClient = InfluxDBClient('cs1-influx.z1.netpoint-dc.com', 8086, 'puls', 'pulsPassword', 'puls')
+influxClient = InfluxDBClient('cs1-influx.z1.netpoint-dc.com', 8086, 'puls', 'XXXXX', 'puls')
 
 hosts = cloudstack.listHosts({'hypervisor': 'KVM'})
 
