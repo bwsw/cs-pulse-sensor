@@ -1,7 +1,7 @@
 # cs-pulse-sensor
-The purpose of the container is to monitor remote libvirt KVM hypervisor host and gather the information about VM resource usage. It is implemented in python2.7 with libvirt. It stores gathered statistics to the remote influxdb storage.
+The purpose of the container is to monitor remote libvirt KVM hypervisor host and gather the information about VM resource usage. It is implemented in python2.7 with libvirt. It stores collected statistics to the remote influxdb storage.
 
-Currently it gathers next metrics: 
+Currently it collects next metrics: 
  - Host: CPU statistics, RAM statistics
  - Virtual machines: cpuTime, RAM usage, disk IO, network IO
 
@@ -34,5 +34,5 @@ Container supports next configuration parameters:
 - KVM_HOST - fqdn for libvrt KVM connection line
 - PAUSE - interval between metering
 - INFLUX\_\* - information about influxdb access
-- GATHER_HOST_STATS - if to gather information about a hypervisor host
+- GATHER_HOST_STATS - if to collect information about a hypervisor host
 - DEBUG - print or avoid JSON dumps inside docker container (useful for troubleshooting in attached mode)
