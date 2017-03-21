@@ -1,0 +1,15 @@
+#!/bin/bash
+
+export KVM_HOST='qemu+tcp://root@10.252.1.32:16509/system'
+export INFLUX_HOST=influx
+export INFLUX_PORT=8086
+export INFLUX_DB=puls
+export INFLUX_USER=puls
+export INFLUX_PASSWORD=pulsPassword
+export GATHER_HOST_STATS=true
+export DEBUG=true
+
+../src/virt-hostinfo
+
+
+

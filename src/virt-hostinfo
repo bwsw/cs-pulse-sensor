@@ -19,6 +19,8 @@ influxPort = int(os.environ["INFLUX_PORT"])
 influxDB = os.environ["INFLUX_DB"]
 influxUser = os.environ["INFLUX_USER"]
 influxPassword = os.environ["INFLUX_PASSWORD"]
+gatherHostStats = os.environ["GATHER_HOST_STATS"]
+debug=os.environ["DEBUG"]
 
 influxClient = InfluxDBClient(influxHost, influxPort, influxUser, influxPassword, influxDB)
 
@@ -27,9 +29,7 @@ try:
 	if conn == None:
 		raise Exception("Failed to open connection to %s" % (csHost,))
 		exit(1)
-		
-	hostInfo = conn.getInfo()
-	cpuFreq = hostInfo[3]
+	
 	
 	domainIDs = conn.listDomainsID()
 	if domainIDs == None:
@@ -72,17 +72,29 @@ try:
 			if disk.get('device') <> 'disk':
 				continue
 
+			dev = disk.find('target').get('dev')
+			stats = domain.blockStats(dev)
+
+			source = None
 			if disk.get('type') == 'file':
-				dev = disk.find('target').get('dev')
 				source = disk.find('source').get('file')
-				stats = domain.blockStats(dev)
-				vmHost["diskStatistics"]["file://%s" % (source,)] = {
+				source = "file://%s" % (source,)
+			elif disk.get('type') == 'block':
+				source = disk.find('source').get('dev')
+				source = "block://%s" % (source,)
+			elif disk.get('type') == 'network' and disk.find('source').get('protocol') == 'rbd':
+				source = disk.find('source').get('name')
+				source = "rbd://%s" % (source,)
+			else:
+				raise Exception("Undefined or Unknown device type for VM: %s." % (vmHost["name"],))
+
+			if source is not None:
+				vmHost["diskStatistics"][source] = {
 					"readIOPS" :  long(stats[0]),
 					"readBytes":  long(stats[1]),
 					"writeIOPS":  long(stats[2]),
 					"writeBytes": long(stats[3]),
 					"ioErrors":   long(stats[4])}
-				
 		
 		tags = {
 			"vmId": vmHost["name"],
@@ -131,8 +143,34 @@ try:
 				"fields": vmHost["diskStatistics"][path]
 			})
 		# influxClient.write_points(query)
-		print json.dumps(query, sort_keys=True, indent=4, separators=(',', ': '))
-		print "\n"
+		if debug == 'true':
+			print json.dumps(query, sort_keys=True, indent=4, separators=(',', ': '))
+			print "\n"
+
+	if gatherHostStats == 'true':
+		query = []
+		stats = conn.getCPUStats(libvirt.VIR_NODE_CPU_STATS_ALL_CPUS)
+		nodeinfo = conn.getInfo()
+		mem = conn.getFreeMemory()
+		query.append({
+			"measurement": "nodeInfo",
+			"tags": { 'vmHost': csHost },
+			"fields": {
+				'kernel': long(stats['kernel']  / 1000000000.),
+				'idle': long(stats['idle'] / 1000000000.),
+				'user': long(stats['user'] / 1000000000.),
+				'iowait': long(stats['iowait'] / 1000000000.),
+				'totalMem': nodeinfo[1],
+				'freeMem': long(mem / 1024 / 1024)
+			}
+		})
+
+		influxClient.write_points(query)
+
+		if debug == 'true':
+			print json.dumps(query, sort_keys=True, indent=4, separators=(',', ': '))
+			print "\n"
+
 		
 	conn.close()
 
