@@ -71,21 +71,23 @@ try:
 		for disk in blockDevs:
 			if disk.get('device') <> 'disk':
 				continue
-			dev = disk.find('target').get('dev')
-			source = disk.find('source').get('file').split("/")[-1]
-			stats = domain.blockStats(dev)
-			vmHost["diskStatistics"][source] = {
-				"readIOPS" :  long(stats[0]),
-				"readBytes":  long(stats[1]),
-				"writeIOPS":  long(stats[2]),
-				"writeBytes": long(stats[3]),
-				"ioErrors":   long(stats[4])}
+
+			if disk.get('type') == 'file':
+				dev = disk.find('target').get('dev')
+				source = disk.find('source').get('file')
+				stats = domain.blockStats(dev)
+				vmHost["diskStatistics"]["file://%s" % (source,)] = {
+					"readIOPS" :  long(stats[0]),
+					"readBytes":  long(stats[1]),
+					"writeIOPS":  long(stats[2]),
+					"writeBytes": long(stats[3]),
+					"ioErrors":   long(stats[4])}
 				
 		
 		tags = {
-			"id": vmHost["name"],
-			"uuid": vmHost["uuid"],
-			"host": vmHost["host"],
+			"vmId": vmHost["name"],
+			"vmUuid": vmHost["uuid"],
+			"vmHost": vmHost["host"],
 		}
 		
 		query = [
@@ -118,16 +120,19 @@ try:
 				"fields": vmHost["networkStatistics"][key]
 			})
 		
-		for key in vmHost["diskStatistics"].keys():
+		for path in vmHost["diskStatistics"].keys():
+			parts = path.split('/')
 			diskTags = tags.copy()
-			diskTags["device"] = key
+			diskTags["image"] = parts[-1]
+			diskTags["pool"] = parts[-2]
 			query.append({
 				"measurement": "disk",
 				"tags": diskTags,
-				"fields": vmHost["diskStatistics"][key]
+				"fields": vmHost["diskStatistics"][path]
 			})
-		influxClient.write_points(query)
-		print json.dumps(vmHost)
+		# influxClient.write_points(query)
+		print json.dumps(query, sort_keys=True, indent=4, separators=(',', ': '))
+		print "\n"
 		
 	conn.close()
 
