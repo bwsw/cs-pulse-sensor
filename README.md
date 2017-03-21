@@ -12,7 +12,7 @@ Features:
 
 Usage:
 
-`
+```
 # docker pull bwsw/cs-pulse-sensor
 # docker run --restart=always -d --name 10.252.1.$i \
              -e PAUSE=10 \
@@ -26,4 +26,4 @@ Usage:
              -e DEBUG=true \
              -e KVM_HOST=qemu+tcp://root@10.252.1.11:16509/system \
              bwsw/cs-pulse-sensor
-`
+```
