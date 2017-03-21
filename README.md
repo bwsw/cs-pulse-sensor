@@ -36,3 +36,99 @@ Container supports next configuration parameters:
 - INFLUX\_\* - information about influxdb access
 - GATHER_HOST_STATS - if to collect information about a hypervisor host
 - DEBUG - print or avoid JSON dumps inside docker container (useful for troubleshooting in attached mode)
+
+## InfluxDB structure
+
+Virtualization node series look like:
+
+```
+[
+    {
+        "fields": {
+            "freeMem": 80558,
+            "idle": 120492574,
+            "iowait": 39380,
+            "kernel": 1198652,
+            "totalMem": 128850,
+            "user": 6416940
+        },
+        "measurement": "nodeInfo",
+        "tags": {
+            "vmHost": "qemu+tcp://root@10.252.1.33:16509/system"
+        }
+    }
+]
+```
+
+Virtual machine series look like:
+
+```
+[
+    {
+        "fields": {
+            "cpuTime": 1070.75,
+            "cpus": 4
+        },
+        "measurement": "cpuTime",
+        "tags": {
+            "vmHost": "qemu+tcp://root@10.252.1.33:16509/system",
+            "vmId": "i-376-1733-VM",
+            "vmUuid": "12805898-0fda-4fa6-9f18-fac64f673679"
+        }
+    },
+    {
+        "fields": {
+            "maxmem": 4194304,
+            "mem": 4194304,
+            "rss": 1443428
+        },
+        "measurement": "rss",
+        "tags": {
+            "vmHost": "qemu+tcp://root@10.252.1.33:16509/system",
+            "vmId": "i-376-1733-VM",
+            "vmUuid": "12805898-0fda-4fa6-9f18-fac64f673679"
+        }
+    },
+    {
+        "fields": {
+            "readBytes": 111991494,
+            "readDrops": 0,
+            "readErrors": 0,
+            "readPackets": 1453303,
+            "writeBytes": 3067403974,
+            "writeDrops": 0,
+            "writeErrors": 0,
+            "writePackets": 588124
+        },
+        "measurement": "networkInterface",
+        "tags": {
+            "mac": "06:f2:64:00:01:54",
+            "vmHost": "qemu+tcp://root@10.252.1.33:16509/system",
+            "vmId": "i-376-1733-VM",
+            "vmUuid": "12805898-0fda-4fa6-9f18-fac64f673679"
+        }
+    },
+    {
+        "fields": {
+            "ioErrors": -1,
+            "readBytes": 676948992,
+            "readIOPS": 55670,
+            "writeBytes": 884449280,
+            "writeIOPS": 87854
+        },
+        "measurement": "disk",
+        "tags": {
+            "image": "cc8121ef-2029-4f4f-826e-7c4f2c8a5563",
+            "pool": "b13cb3c0-c84d-334c-9fc3-4826ae58d984",
+            "vmHost": "qemu+tcp://root@10.252.1.33:16509/system",
+            "vmId": "i-376-1733-VM",
+            "vmUuid": "12805898-0fda-4fa6-9f18-fac64f673679"
+        }
+    }
+]
+
+```
+
+## License
+
+Licensed under Apache 2.0 license.
