@@ -39,7 +39,7 @@ Container supports next configuration parameters:
 
 ## InfluxDB structure
 
-Virtualization node series look like:
+Virtualization node series stored into influxdb look like:
 
 ```
 [
@@ -60,7 +60,7 @@ Virtualization node series look like:
 ]
 ```
 
-Virtual machine series look like:
+Virtual machine series stored into influxdb look like:
 
 ```
 [
