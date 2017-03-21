@@ -1,0 +1,10 @@
+#!/bin/bash
+
+while :
+do
+	./virt-hostinfo
+	sleep $PAUSE
+done
+
+
+
