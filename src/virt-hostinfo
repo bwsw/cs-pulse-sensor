@@ -142,7 +142,7 @@ try:
 				"tags": diskTags,
 				"fields": vmHost["diskStatistics"][path]
 			})
-		# influxClient.write_points(query)
+		influxClient.write_points(query)
 		if debug == 'true':
 			print json.dumps(query, sort_keys=True, indent=4, separators=(',', ': '))
 			print "\n"
