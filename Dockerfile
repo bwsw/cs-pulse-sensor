@@ -9,6 +9,8 @@ ENV INFLUX_DB puls
 ENV INFLUX_USER puls
 ENV INFLUX_PASSWORD secret
 ENV PAUSE 20
+ENV GATHER_HOST_STATS true
+ENV DEBUG true
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
