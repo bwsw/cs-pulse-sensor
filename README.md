@@ -9,3 +9,6 @@ Features:
  - purposed for KVM hypervisor
  - tested with block devices located in files (native for Apache Cloudstack and NFS storage)
  - bundled as easy to use Docker container (one container per one virtualization host)
+
+Usage:
+`# docker pull bwsw/cs-pulse-sensor`
