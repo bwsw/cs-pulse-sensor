@@ -3,11 +3,11 @@ FROM ubuntu:16.04
 MAINTAINER Bitworks Software info@bitworks.software
 
 ENV KVM_HOST qemu+tcp://root@10.252.1.35:16509/system
-ENV INFLUX_HOST cs1-influx.z1.netpoint-dc.com
+ENV INFLUX_HOST influxhost.com
 ENV INFLUX_PORT 8086
 ENV INFLUX_DB puls
 ENV INFLUX_USER puls
-ENV INFLUX_PASSWORD pulsPassword
+ENV INFLUX_PASSWORD secret
 ENV PAUSE 20
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
