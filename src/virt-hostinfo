@@ -54,7 +54,7 @@ try:
 		vmHost["maxmem"] = maxmem
 		vmHost["mem"] = mem
 		vmHost["cpus"] = cpus
-		vmHost["cputime"] = str(cput / 1000000000.)
+		vmHost["cputime"] = str(cput / SEC)
 		vmHost["isrunning"] = domain.isActive()
 		vmHost["rss"] = long(domain.memoryStats()["rss"])
 		
