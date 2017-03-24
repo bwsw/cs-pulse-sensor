@@ -115,11 +115,14 @@ Virtual machine series stored into influxdb look like:
     },
     {
         "fields": {
+            "allocatedSpace": 890,
             "ioErrors": -1,
-            "readBytes": 676948992,
-            "readIOPS": 55670,
-            "writeBytes": 884449280,
-            "writeIOPS": 87854
+            "onDiskSpace": 890,
+            "readBytes": 264512607744,
+            "readIOPS": 16538654,
+            "totalSpace": 1000,
+            "writeBytes": 930057794560,
+            "writeIOPS": 30476842
         },
         "measurement": "disk",
         "tags": {
