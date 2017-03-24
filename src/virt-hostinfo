@@ -13,6 +13,11 @@ import traceback
 from influxdb import InfluxDBClient
 from xml.etree import ElementTree
 
+MB = 1024 * 1024
+GB = 1024 * MB
+SEC = 1000000000.
+
+
 csHost = os.environ["KVM_HOST"]
 influxHost = os.environ["INFLUX_HOST"]
 influxPort = int(os.environ["INFLUX_PORT"])
@@ -37,6 +42,9 @@ try:
 		
 	for domainID in domainIDs:
 		domain = conn.lookupByID(domainID)
+		#print [method for method in dir(domain) if callable(getattr(domain, method))]
+		#continue
+
 		tree = ElementTree.fromstring(domain.XMLDesc())
 		vmHost = {}
 		vmHost["host"] = csHost
@@ -75,6 +83,9 @@ try:
 			dev = disk.find('target').get('dev')
 			stats = domain.blockStats(dev)
 
+			totalSpace, allocatedSpace, onDiskSpace = domain.blockInfo(dev)
+			#print info[0] / 1024 / 1024 / 1024, info[1] / 1024 / 1024 / 1024, info[2] / 1024 / 1024 / 1024
+
 			source = None
 			if disk.get('type') == 'file':
 				source = disk.find('source').get('file')
@@ -88,13 +99,17 @@ try:
 			else:
 				raise Exception("Undefined or Unknown device type for VM: %s." % (vmHost["name"],))
 
+
 			if source is not None:
 				vmHost["diskStatistics"][source] = {
 					"readIOPS" :  long(stats[0]),
 					"readBytes":  long(stats[1]),
 					"writeIOPS":  long(stats[2]),
 					"writeBytes": long(stats[3]),
-					"ioErrors":   long(stats[4])}
+					"ioErrors":   long(stats[4]),
+					"totalSpace": int(totalSpace / GB),
+					"allocatedSpace": int(allocatedSpace / GB),
+					"onDiskSpace": int(onDiskSpace / GB) }
 		
 		tags = {
 			"vmId": vmHost["name"],
@@ -142,7 +157,9 @@ try:
 				"tags": diskTags,
 				"fields": vmHost["diskStatistics"][path]
 			})
+
 		influxClient.write_points(query)
+
 		if debug == 'true':
 			print json.dumps(query, sort_keys=True, indent=4, separators=(',', ': '))
 			print "\n"
@@ -156,12 +173,12 @@ try:
 			"measurement": "nodeInfo",
 			"tags": { 'vmHost': csHost },
 			"fields": {
-				'kernel': long(stats['kernel']  / 1000000000.),
-				'idle': long(stats['idle'] / 1000000000.),
-				'user': long(stats['user'] / 1000000000.),
-				'iowait': long(stats['iowait'] / 1000000000.),
+				'kernel': long(stats['kernel']  / SEC),
+				'idle': long(stats['idle'] / SEC),
+				'user': long(stats['user'] / SEC),
+				'iowait': long(stats['iowait'] / SEC),
 				'totalMem': nodeinfo[1],
-				'freeMem': long(mem / 1024 / 1024)
+				'freeMem': long(mem / MB)
 			}
 		})
 
