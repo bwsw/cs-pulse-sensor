@@ -1,4 +1,4 @@
-# cs-pulse-sensor
+# CS-Umbrella / Pulse Plugin Sensor
 
 The purpose of the container is to monitor remote libvirt KVM hypervisor host and gather the information about VM resource usage. It is implemented in python2.7 with libvirt. It stores collected statistics to the remote influxdb storage.
 
