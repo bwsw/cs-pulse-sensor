@@ -15,7 +15,7 @@ ENV DEBUG true
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q python-libvirt python-influxdb
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q python-libvirt python-influxdb openssh-client
 
 COPY ./src /opt
 
