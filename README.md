@@ -20,6 +20,7 @@ Usage:
 ```
 # docker pull bwsw/cs-pulse-sensor
 # docker run --restart=always -d --name 10.252.1.11 \
+             -v /root/.ssh:/root/.ssh \
              -e PAUSE=10 \
              -e INFLUX_HOST=influx \
              -e INFLUX_PORT=8086 \
@@ -28,7 +29,7 @@ Usage:
              -e INFLUX_PASSWORD=secret \
              -e GATHER_HOST_STATS=true
              -e DEBUG=true \
-             -e KVM_HOST=qemu+tcp://root@10.252.1.11:16509/system \
+             -e KVM_HOST=qemu+ssh://root@10.252.1.11/system \
              bwsw/cs-pulse-sensor
 ```
 
@@ -59,7 +60,7 @@ Virtualization node series stored into influxdb look like:
         },
         "measurement": "nodeInfo",
         "tags": {
-            "vmHost": "qemu+tcp://root@10.252.1.33:16509/system"
+            "vmHost": "qemu+ssh://root@10.252.1.33/system"
         }
     }
 ]
@@ -76,7 +77,7 @@ Virtual machine series stored into influxdb look like:
         },
         "measurement": "cpuTime",
         "tags": {
-            "vmHost": "qemu+tcp://root@10.252.1.33:16509/system",
+            "vmHost": "qemu+ssh://root@10.252.1.33/system",
             "vmId": "i-376-1733-VM",
             "vmUuid": "12805898-0fda-4fa6-9f18-fac64f673679"
         }
@@ -89,7 +90,7 @@ Virtual machine series stored into influxdb look like:
         },
         "measurement": "rss",
         "tags": {
-            "vmHost": "qemu+tcp://root@10.252.1.33:16509/system",
+            "vmHost": "qemu+ssh://root@10.252.1.33/system",
             "vmId": "i-376-1733-VM",
             "vmUuid": "12805898-0fda-4fa6-9f18-fac64f673679"
         }
@@ -108,7 +109,7 @@ Virtual machine series stored into influxdb look like:
         "measurement": "networkInterface",
         "tags": {
             "mac": "06:f2:64:00:01:54",
-            "vmHost": "qemu+tcp://root@10.252.1.33:16509/system",
+            "vmHost": "qemu+ssh://root@10.252.1.33/system",
             "vmId": "i-376-1733-VM",
             "vmUuid": "12805898-0fda-4fa6-9f18-fac64f673679"
         }
@@ -128,7 +129,7 @@ Virtual machine series stored into influxdb look like:
         "tags": {
             "image": "cc8121ef-2029-4f4f-826e-7c4f2c8a5563",
             "pool": "b13cb3c0-c84d-334c-9fc3-4826ae58d984",
-            "vmHost": "qemu+tcp://root@10.252.1.33:16509/system",
+            "vmHost": "qemu+ssh://root@10.252.1.33/system",
             "vmId": "i-376-1733-VM",
             "vmUuid": "12805898-0fda-4fa6-9f18-fac64f673679"
         }
