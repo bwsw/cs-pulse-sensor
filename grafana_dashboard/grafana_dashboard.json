@@ -1084,39 +1084,29 @@
                 },
                 {
                   "params": [
-                    "vmId"
-                  ],
-                  "type": "tag"
-                },
-                {
-                  "params": [
                     "null"
                   ],
                   "type": "fill"
                 }
               ],
-              "measurement": "rss",
+              "hide": false,
               "orderByTime": "ASC",
               "policy": "default",
-              "refId": "A",
+              "query": "SELECT MAX(\"rss\") AS \"UsedMem\" FROM \"rss\" WHERE $timeFilter GROUP BY time(1m), \"vmId\" fill(null)\n",
+              "rawQuery": true,
+              "refId": "B",
               "resultFormat": "time_series",
               "select": [
                 [
                   {
                     "params": [
-                      "rss"
+                      "value"
                     ],
                     "type": "field"
                   },
                   {
                     "params": [],
-                    "type": "max"
-                  },
-                  {
-                    "params": [
-                      "UsedMem"
-                    ],
-                    "type": "alias"
+                    "type": "mean"
                   }
                 ]
               ],
@@ -1382,5 +1372,5 @@
   },
   "timezone": "browser",
   "title": "LibVirt",
-  "version": 30
+  "version": 34
 }
